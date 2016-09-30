@@ -50,13 +50,40 @@ class CurrentWeather {
         return _currentTemp
     }
     
-    func downloadWeatherDetails(completed: DownloadComplete) {
+    func downloadWeatherDetails(completed: @escaping DownloadComplete) {
+        
         let currentWeatherURL = URL(string: MAIN_URL + WEATHER_URL)!
+        
         Alamofire.request(currentWeatherURL).responseJSON { response in
+            
             let result = response.result
-            print(response)
+            
+            if let dict = result.value as? [String: Any] {
+                
+                if let name = dict["name"] as? String {
+                    self._cityName = name.capitalized
+                }
+                
+                if let weather = dict["weather"] as? [[String: Any]] {
+                    
+                    if let main = weather[0]["main"] as? String {
+                        self._weatherType = main.capitalized
+                    }
+                }
+                
+                if let main = dict["main"] as? [String: Any] {
+                    
+                    if let currentTemperature = main["temp"] as? Double {
+                        self._currentTemp = currentTemperature
+                    }
+                }
+                
+                if let date = dict["dt"] as? String {
+                    self._date = date
+                }
+            }
+            completed()
         }
-        completed()
     }
 
 }
