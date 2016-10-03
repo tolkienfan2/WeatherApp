@@ -14,7 +14,7 @@ class CurrentWeather {
     var _cityName: String!
     var _date: String!
     var _weatherType: String!
-    var _currentTemp: Double!
+    var _currentTemp: String!
     
     var cityName: String {
         if _cityName == nil {
@@ -43,9 +43,9 @@ class CurrentWeather {
         return _weatherType
     }
     
-    var currentTemp: Double {
+    var currentTemp: String {
         if _currentTemp == nil {
-            _currentTemp = 0
+            _currentTemp = ""
         }
         return _currentTemp
     }
@@ -74,7 +74,7 @@ class CurrentWeather {
                 if let main = dict["main"] as? [String: Any] {
                     
                     if let currentTemperature = main["temp"] as? Double {
-                        self._currentTemp = currentTemperature
+                        self._currentTemp = String(format: "%.1f", currentTemperature)
                     }
                 }
                 

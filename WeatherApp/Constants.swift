@@ -10,11 +10,15 @@ import Foundation
 
 private var _APIKEY = "6ce258e8689137132fcce079ac013e71"
 
+var lat: Double!
+var lon: Double!
+//var location = location(lat: lat, lon: lon)
+
 let MAIN_URL = "http://api.openweathermap.org"
 
 let WEATHER_URL = "/data/2.5/weather?id=6094817" + "&units=metric" + "&APPID=\(_APIKEY)"
 
-let FORECAST_URL = "/data/2.5/forecast?id=6094817" + "&units=metric" + "&APPID=\(_APIKEY)"
+let FORECAST_URL = "/data/2.5/forecast/daily?id=6094817" + "&units=metric" + "&APPID=\(_APIKEY)"
 
 let ICON_URL = "/img/w/"
 

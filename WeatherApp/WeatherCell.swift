@@ -16,10 +16,18 @@ class WeatherCell: UITableViewCell {
     @IBOutlet weak var hiTempLbl: UILabel!
     @IBOutlet weak var loTempLbl: UILabel!
     
-
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+    }
+    
+    func configureCell(forecast: WeatherForecast) {
+        
+        weatherLabel.text = forecast.weatherType
+        hiTempLbl.text = "\(forecast.tempMax)" + "º"
+        loTempLbl.text = "\(forecast.tempMin)" + "º"
+        dayLabel.text = forecast.date
+        weatherImg.image = UIImage(named: forecast.weatherType)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -13,19 +13,13 @@ class WeatherForecast {
     
     var _date: String!
     var _weatherType: String!
-    var _tempMin: Double!
-    var _tempMax: Double!
+    var _tempMin: String!
+    var _tempMax: String!
     
     var date: String {
         if _date == nil {
             _date = ""
         }
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .short           //adjust to show day only
-        dateFormatter.timeStyle = .none
-        let currentDate = dateFormatter.string(from: Date())
-        self._date = "\(currentDate)"
         return _date
     }
     
@@ -36,56 +30,54 @@ class WeatherForecast {
         return _weatherType
     }
     
-    var tempMin: Double {
+    var tempMin: String {
         if _tempMin == nil {
-            _tempMin = 0
+            _tempMin = ""
         }
         return _tempMin
     }
     
-    var tempMax: Double {
+    var tempMax: String {
         if _tempMax == nil {
-            _tempMax = 0
+            _tempMax = ""
         }
         return _tempMax
     }
     
-    func downloadForecastData(completed: @escaping DownloadComplete) {
+    init(weatherDict: [String: Any]) {
         
-        let forecastURL = URL(string: MAIN_URL + FORECAST_URL)!
-        
-        Alamofire.request(forecastURL).responseJSON { response in
-            
-            let result = response.result
-            
-            if let dict = result.value as? [String: Any] {
+        if let date = weatherDict["dt"] as? Double {
+            let unixDate = Date(timeIntervalSince1970: date)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .full
+            dateFormatter.timeStyle = .none
+            dateFormatter.dateFormat = "EEEE"
+            self._date = unixDate.dayOfTheWeek()
+        }
                 
-                if let forecast = dict["list"] as? [[String: Any]] {
-                    
-                    if let date = forecast[0]["dt"] as? String {
-                        self._date = date
-                    }
-                    
-                    if let weather = forecast[0]["weather"] as? [[String: Any]] {
-                        if let main = weather[0]["main"] as? String {
-                            self._weatherType = main
-                        }
-                    }
-                    
-                    if let temperature = forecast[0]["main"] as? [String: Double] {
-                        
-                        let temp_max = temperature["temp_max"]
-                            self._tempMax = temp_max
-                        
-                        let temp_min = temperature["temp_min"]
-                            self._tempMin = temp_min
-                    }
+        if let weather = weatherDict["weather"] as? [[String: Any]] {
+            if let main = weather[0]["main"] as? String {
+                self._weatherType = main
                 }
             }
-            print(self._weatherType)
-            print(self.tempMax)
-            completed()
+                    
+        if let temperature = weatherDict["temp"] as? [String: Any] {
+                        
+            if let temp_max = temperature["max"] as? Double {
+                self._tempMax = String(format: "%.1f", temp_max)
+            }
+            
+            if let temp_min = temperature["min"] as? Double {
+                self._tempMin = String(format: "%.1f", temp_min)
+            }
         }
     }
-    
+}
+
+extension Date {
+    func dayOfTheWeek() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        return dateFormatter.string(from: self)
+    }
 }
