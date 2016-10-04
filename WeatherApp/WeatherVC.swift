@@ -23,7 +23,8 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var forecast: WeatherForecast!
     var forecasts = [WeatherForecast]()
     
-    var locationManager = CLLocationManager()
+    var locationManager: CLLocationManager!
+    var currentLocation: CLLocation!
     
     override func viewDidLoad() {
         
@@ -31,8 +32,8 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         tableView.dataSource = self
         tableView.delegate = self
-        locationManager.delegate = self
         
+        startLocationManager()
         currentWeather = CurrentWeather()
         
         currentWeather.downloadWeatherDetails {
@@ -40,9 +41,26 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 self.updateMainView()
             }
         }
-
     }
+    
+    func startLocationManager() {
         
+        if locationManager == nil {
+            locationManager = CLLocationManager()
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+            locationManager.requestWhenInUseAuthorization()
+        }
+        
+        locationManager.startUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+            currentLocation = locations.last
+            Location.sharedInstance.latitude = currentLocation.coordinate.latitude
+            Location.sharedInstance.longitude = currentLocation.coordinate.longitude
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -73,8 +91,7 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     func downloadForecastData(completed: @escaping DownloadComplete) {
         
-        let forecastURL = URL(string: MAIN_URL + FORECAST_URL)!
-        Alamofire.request(forecastURL).responseJSON { response in
+        Alamofire.request(FORECAST_URL).responseJSON { response in
             let result = response.result
             if let dict = result.value as? [String: Any] {
                 if let list = dict["list"] as? [[String: Any]] {

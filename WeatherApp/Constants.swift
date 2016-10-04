@@ -10,16 +10,21 @@ import Foundation
 
 private var _APIKEY = "6ce258e8689137132fcce079ac013e71"
 
-var lat: Double!
-var lon: Double!
-//var location = location(lat: lat, lon: lon)
-
 let MAIN_URL = "http://api.openweathermap.org"
 
-let WEATHER_URL = "/data/2.5/weather?id=6094817" + "&units=metric" + "&APPID=\(_APIKEY)"
+let latitude = Location.sharedInstance.latitude ?? 45.411171
+let longitude = Location.sharedInstance.longitude ?? -75.69812
 
-let FORECAST_URL = "/data/2.5/forecast/daily?id=6094817" + "&units=metric" + "&APPID=\(_APIKEY)"
+let LOCATION = "lat=\(latitude)&lon=\(longitude)"
 
-let ICON_URL = "/img/w/"
+let WEATHER = "/data/2.5/weather?"
+
+let FORECAST = "/data/2.5/forecast/daily?"
+
+let PARAMETERS = "&units=metric" + "&APPID=\(_APIKEY)"
+
+let WEATHER_URL = MAIN_URL + WEATHER + LOCATION + PARAMETERS
+
+let FORECAST_URL = MAIN_URL + FORECAST + LOCATION + PARAMETERS
 
 typealias DownloadComplete = () -> ()
