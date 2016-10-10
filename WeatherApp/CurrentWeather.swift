@@ -70,7 +70,7 @@ class CurrentWeather {
   
     
     func downloadWeatherDetails(completed: @escaping DownloadComplete) {
-        
+        print(WEATHER_URL)
         Alamofire.request(WEATHER_URL).responseJSON { response in
             
             let result = response.result

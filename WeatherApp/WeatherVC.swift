@@ -38,7 +38,7 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         startLocationManager()
         currentWeather = CurrentWeather()
-        
+        print("CURRENT LOCATION IS \(currentLocation)")
         currentWeather.downloadWeatherDetails {
             self.downloadForecastData {
                 self.updateMainView()
