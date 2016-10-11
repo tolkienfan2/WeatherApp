@@ -19,11 +19,15 @@ let LOCATION = "lat=\(latitude)&lon=\(longitude)"
 
 let WEATHER = "/data/2.5/weather?"
 
+let TODAYS_TEMPS = "/data/2.5/forecast?"
+
 let FORECAST = "/data/2.5/forecast/daily?"
 
 let PARAMETERS = "&units=metric" + "&APPID=\(_APIKEY)"
 
 let WEATHER_URL = MAIN_URL + WEATHER + LOCATION + PARAMETERS
+
+let TODAYS_TEMPS_URL = MAIN_URL + TODAYS_TEMPS + LOCATION + PARAMETERS
 
 let FORECAST_URL = MAIN_URL + FORECAST + LOCATION + PARAMETERS
 

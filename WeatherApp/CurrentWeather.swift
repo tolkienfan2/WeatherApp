@@ -97,15 +97,6 @@ class CurrentWeather {
                     if let currentTemperature = main["temp"] as? Double {
                         self._currentTemp = String(format: "%.1f", currentTemperature)
                     }
-                    
-                    if let hiTemp = main["temp_max"] as? Double {
-                        self._hiTemp = String(format: "%.1f", hiTemp)
-                    }
-                    
-                    if let loTemp = main["temp_min"] as? Double {
-                        self._loTemp = String(format: "%.1f", loTemp)
-                    }
-                    
                 }
                 
                 if (dict["dt"] as? Double) != nil {
@@ -117,8 +108,29 @@ class CurrentWeather {
                     self._date = "\(currentDate)"
                 }
             }
-            completed()
         }
+        
+        Alamofire.request(TODAYS_TEMPS_URL).responseJSON { response in
+            
+            let result = response.result
+            
+            if let dict = result.value as? [String: Any] {
+                
+                if let list = dict["list"] as? [[String: Any]] {
+                    
+                    var tempArray = [Double]()
+                    
+                    for index in 0...4 {
+                        if let main = list[index]["main"] as? [String: Any] {
+                            if let temp = main["temp"] as? Double {
+                                tempArray.append(temp)
+                            }
+                        }
+                    }
+                    print(tempArray)
+                }
+            }
+        }
+    completed()
     }
-
 }
