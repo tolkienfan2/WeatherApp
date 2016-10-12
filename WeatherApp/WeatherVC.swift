@@ -21,47 +21,104 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBOutlet weak var hiTempLabel: UILabel!
     @IBOutlet weak var loTempLabel: UILabel!
     
+    let locationManager = CLLocationManager()
+    var currentLocation: CLLocation!
+    var geocoder: CLGeocoder!
     
     var currentWeather: CurrentWeather!
     var forecast: WeatherForecast!
     var forecasts = [WeatherForecast]()
     
-    var locationManager: CLLocationManager!
-    var currentLocation: CLLocation!
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
         tableView.dataSource = self
         tableView.delegate = self
         
-        startLocationManager()
+        geocoder = CLGeocoder()
         currentWeather = CurrentWeather()
-        print("CURRENT LOCATION IS \(currentLocation)")
+        locationAuthStatus()
+    }
+    
+    func locationAuthStatus() {
+        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        } else {
+            locationManager.requestWhenInUseAuthorization()
+            locationAuthStatus()
+        }
+    }
+    
+    func loadWeatherData() {
+        
+        print("LOCATION: \(LOCATION)")
+
         currentWeather.downloadWeatherDetails {
             self.downloadForecastData {
                 self.updateMainView()
             }
         }
+        locationManager.stopUpdatingLocation()
     }
     
-    func startLocationManager() {
+    func updateMainView() {
+        dateLabel.text = currentWeather.date
+        currentTempLabel.text = String(currentWeather.currentTemp)?.appending("ºC")
+        hiTempLabel.text = String(currentWeather.hiTemp)?.appending("º")
+        loTempLabel.text = String(currentWeather.loTemp)?.appending("º")
+        currentWeatherLabel.text = currentWeather.weatherType
+        currentWeatherImg.image = UIImage(named: currentWeather.weatherImg)
+    }
+    
+    func downloadForecastData(completed: @escaping DownloadComplete) {
         
-        if locationManager == nil {
-            locationManager = CLLocationManager()
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
-            locationManager.requestWhenInUseAuthorization()
+        Alamofire.request(FORECAST_URL).responseJSON { response in
+            
+            let result = response.result
+            
+            if let dict = result.value as? [String: Any] {
+                
+                if let list = dict["list"] as? [[String: Any]] {
+                    
+                    for obj in list {
+                        let forecast = WeatherForecast(weatherDict: obj)
+                        self.forecasts.append(forecast)
+                    }
+                    self.forecasts.remove(at: 0)
+                    self.tableView.reloadData()
+                }
+            }
+            completed()
         }
-        
-        locationManager.startUpdatingLocation()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-            currentLocation = locations.last
-            Location.sharedInstance.latitude = currentLocation.coordinate.latitude
-            Location.sharedInstance.longitude = currentLocation.coordinate.longitude
+        
+        currentLocation = locations.last
+        let lat = currentLocation.coordinate.latitude
+        let lon = currentLocation.coordinate.longitude
+        
+        geocoder.reverseGeocodeLocation(currentLocation) { (placemarks, error) in
+            if error != nil {
+                self.locationLabel.text = "Lat:" + String(format: "%.2f", lat) + ", Lon:" + String(format: "%.2f", lon)
+            }
+            else {
+                if let placemarks = placemarks, let placemark = placemarks.first {
+                        self.locationLabel.text = placemark.locality
+                }
+                else {
+                self.locationLabel.text = "Lat:" + String(format: "%.2f", lat) + ", Lon:" + String(format: "%.2f", lon)
+                }
+            }
+        }
+        Location.sharedInstance.latitude = lat
+        Location.sharedInstance.longitude = lon
+        loadWeatherData()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -88,32 +145,4 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
     }
 
-    func updateMainView() {
-        dateLabel.text = currentWeather.date
-        currentTempLabel.text = String(currentWeather.currentTemp)?.appending("ºC")
-        hiTempLabel.text = String(currentWeather.hiTemp)?.appending("º")
-        loTempLabel.text = String(currentWeather.loTemp)?.appending("º")
-        locationLabel.text = currentWeather.cityName
-        currentWeatherLabel.text = currentWeather.weatherType
-        currentWeatherImg.image = UIImage(named: currentWeather.weatherImg)
-    }
-    
-    func downloadForecastData(completed: @escaping DownloadComplete) {
-        
-        Alamofire.request(FORECAST_URL).responseJSON { response in
-            let result = response.result
-            if let dict = result.value as? [String: Any] {
-                if let list = dict["list"] as? [[String: Any]] {
-                    for obj in list {
-                        let forecast = WeatherForecast(weatherDict: obj)
-                        self.forecasts.append(forecast)
-                    }
-                    self.forecasts.remove(at: 0)
-                    self.tableView.reloadData()
-                }
-            }
-            completed()
-        }
-    }
-    
 }

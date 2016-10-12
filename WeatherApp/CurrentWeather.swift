@@ -70,7 +70,7 @@ class CurrentWeather {
   
     
     func downloadWeatherDetails(completed: @escaping DownloadComplete) {
-        print(WEATHER_URL)
+
         Alamofire.request(WEATHER_URL).responseJSON { response in
             
             let result = response.result
@@ -120,14 +120,21 @@ class CurrentWeather {
                     
                     var tempArray = [Double]()
                     
-                    for index in 0...4 {
+                    for index in 0...5 {
                         if let main = list[index]["main"] as? [String: Any] {
                             if let temp = main["temp"] as? Double {
                                 tempArray.append(temp)
                             }
                         }
                     }
-                    print(tempArray)
+                    
+                    if let maxTemp = tempArray.max() {
+                        self._hiTemp = String(format: "%.1f", maxTemp)
+                    }
+                    
+                    if let minTemp = tempArray.min() {
+                        self._loTemp = String(format: "%.1f",minTemp)
+                    }
                 }
             }
         }

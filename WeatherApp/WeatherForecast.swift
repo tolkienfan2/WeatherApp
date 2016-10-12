@@ -45,7 +45,8 @@ class WeatherForecast {
     }
     
     init(weatherDict: [String: Any]) {
-        
+
+        print("Forecast: " + FORECAST_URL)
         if let date = weatherDict["dt"] as? Double {
             let unixDate = Date(timeIntervalSince1970: date)
             let dateFormatter = DateFormatter()
@@ -71,7 +72,7 @@ class WeatherForecast {
                 self._tempMin = String(format: "%.1f", temp_min)
             }
         }
-    }
+    }    
 }
 
 extension Date {
