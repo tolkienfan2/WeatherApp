@@ -36,28 +36,34 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
         
         tableView.dataSource = self
         tableView.delegate = self
         
         geocoder = CLGeocoder()
-        currentWeather = CurrentWeather()
-        locationAuthStatus()
     }
     
-    func locationAuthStatus() {
-        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-            locationManager.startUpdatingLocation()
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-            locationAuthStatus()
-        }
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        locationAuthStatus()
+//    }
+//    
+//    func locationAuthStatus() {
+//        if CLLocationManager.authorizationStatus() != .authorizedWhenInUse {
+//            locationManager.requestWhenInUseAuthorization()
+//        } else {
+//           // do nothing
+//        }
+//        locationManager.startUpdatingLocation()
+//    }
     
     func loadWeatherData() {
         
         print("LOCATION: \(LOCATION)")
-
+        
+        currentWeather = CurrentWeather()
+        
         currentWeather.downloadWeatherDetails {
             self.downloadForecastData {
                 self.updateMainView()
@@ -89,10 +95,10 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                         let forecast = WeatherForecast(weatherDict: obj)
                         self.forecasts.append(forecast)
                     }
-                    self.forecasts.remove(at: 0)
-                    self.tableView.reloadData()
                 }
             }
+            self.forecasts.remove(at: 0)
+            self.tableView.reloadData()
             completed()
         }
     }

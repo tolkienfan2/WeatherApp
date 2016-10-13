@@ -11,20 +11,12 @@ import Alamofire
 
 class CurrentWeather {
     
-    var _cityName: String!
     var _date: String!
     var _weatherType: String!
     var _weatherImg: String!
     var _currentTemp: String!
     var _hiTemp: String!
     var _loTemp: String!
-    
-    var cityName: String {
-        if _cityName == nil {
-            _cityName = ""
-        }
-        return _cityName
-    }
     
     var date: String {
         if _date == nil {
@@ -72,14 +64,10 @@ class CurrentWeather {
     func downloadWeatherDetails(completed: @escaping DownloadComplete) {
 
         Alamofire.request(WEATHER_URL).responseJSON { response in
-            
+            print("WEATHER: \(WEATHER_URL)")
             let result = response.result
             
             if let dict = result.value as? [String: Any] {
-                
-                if let name = dict["name"] as? String {
-                    self._cityName = name.capitalized
-                }
                 
                 if let weather = dict["weather"] as? [[String: Any]] {
                     
@@ -108,6 +96,7 @@ class CurrentWeather {
                     self._date = "\(currentDate)"
                 }
             }
+            completed()
         }
         
         Alamofire.request(TODAYS_TEMPS_URL).responseJSON { response in
@@ -137,7 +126,7 @@ class CurrentWeather {
                     }
                 }
             }
+            completed()
         }
-    completed()
     }
 }
