@@ -10,6 +10,16 @@ import Foundation
 
 private var _APIKEY = "6ce258e8689137132fcce079ac013e71"
 
+// private let _ADMOB_AD_UNIT_ID = "AIzaSyBhiMayjALj_gmfxpJxlrBJ7nZ03OW1BlY"
+
+private let _ADMOB_AD_UNIT_ID = "ca-app-pub-3940256099942544/2934735716"
+
+var ADMOB_AD_UNIT_ID: String {
+    get {
+        return _ADMOB_AD_UNIT_ID
+    }
+}
+
 let MAIN_URL = "http://api.openweathermap.org"
 
 let latitude = Location.sharedInstance.latitude ?? 45.411171

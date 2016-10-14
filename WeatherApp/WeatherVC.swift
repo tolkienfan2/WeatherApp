@@ -9,8 +9,9 @@
 import UIKit
 import Alamofire
 import CoreLocation
+import GoogleMobileAds
 
-class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
+class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate, GADBannerViewDelegate {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var dateLabel: UILabel!
@@ -30,6 +31,7 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var forecast: WeatherForecast!
     var forecasts = [WeatherForecast]()
     
+    @IBOutlet weak var bannerView = GADBannerView(adSize: kGADAdSizeSmartBannerPortrait)
     
     override func viewDidLoad() {
         
@@ -41,11 +43,13 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
+        geocoder = CLGeocoder()
         
         tableView.dataSource = self
         tableView.delegate = self
         
-        geocoder = CLGeocoder()
+        bannerView?.delegate = self
+        loadAd()
     }
     
     func loadWeatherData() {
@@ -144,5 +148,14 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             return WeatherCell()
         }
     }
+    
+    func loadAd() {
+        bannerView?.adUnitID = ADMOB_AD_UNIT_ID
+        bannerView?.rootViewController = self
+        bannerView?.adSize = kGADAdSizeSmartBannerPortrait
+        bannerView?.load(GADRequest())
+        self.view.addSubview(bannerView!)
+    }
 
 }
+

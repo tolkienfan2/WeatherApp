@@ -6,6 +6,11 @@ target 'WeatherApp' do
   # Comment this line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
 
-  # Pods for WeatherApp
-pod 'Alamofire'
+# Pods for WeatherApp
+  pod 'Alamofire'
+  
+#add pods for Google AdMob
+  pod 'Firebase/Core'
+  pod 'Firebase/AdMob'
+
 end
