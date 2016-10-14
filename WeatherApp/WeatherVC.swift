@@ -12,6 +12,7 @@ import CoreLocation
 
 class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var currentTempLabel: UILabel!
     @IBOutlet weak var currentWeatherImg: UIImageView!
@@ -34,6 +35,8 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         super.viewDidLoad()
         
+        activityIndicator.startAnimating()
+        
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
@@ -44,19 +47,6 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         geocoder = CLGeocoder()
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        locationAuthStatus()
-//    }
-//    
-//    func locationAuthStatus() {
-//        if CLLocationManager.authorizationStatus() != .authorizedWhenInUse {
-//            locationManager.requestWhenInUseAuthorization()
-//        } else {
-//           // do nothing
-//        }
-//        locationManager.startUpdatingLocation()
-//    }
     
     func loadWeatherData() {
         
@@ -79,6 +69,7 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         loTempLabel.text = String(currentWeather.loTemp)?.appending("º")
         currentWeatherLabel.text = currentWeather.weatherType
         currentWeatherImg.image = UIImage(named: currentWeather.weatherImg)
+        activityIndicator.stopAnimating()
     }
     
     func downloadForecastData(completed: @escaping DownloadComplete) {
@@ -91,14 +82,17 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 
                 if let list = dict["list"] as? [[String: Any]] {
                     
+                    var tempArray = [WeatherForecast]()
+                    
                     for obj in list {
                         let forecast = WeatherForecast(weatherDict: obj)
-                        self.forecasts.append(forecast)
+                        tempArray.append(forecast)
                     }
+                    tempArray.remove(at: 0)
+                    self.forecasts = tempArray
+                    self.tableView.reloadData()
                 }
             }
-            self.forecasts.remove(at: 0)
-            self.tableView.reloadData()
             completed()
         }
     }
