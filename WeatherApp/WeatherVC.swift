@@ -22,6 +22,7 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var hiTempLabel: UILabel!
     @IBOutlet weak var loTempLabel: UILabel!
+    @IBOutlet weak var adBannerView: GADBannerView!
     
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation!
@@ -30,8 +31,6 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var currentWeather: CurrentWeather!
     var forecast: WeatherForecast!
     var forecasts = [WeatherForecast]()
-    
-    let adBanner = AdVC()
     
     override func viewDidLoad() {
         
@@ -48,8 +47,15 @@ class WeatherVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         tableView.dataSource = self
         tableView.delegate = self
         
-        adBanner.adViewDidReceiveAd(adBanner.bannerView)
+        loadAd()
     }
+    
+    func loadAd() {
+        adBannerView.adUnitID = ADMOB_AD_UNIT_ID
+        adBannerView.rootViewController = self
+        adBannerView.load(GADRequest())
+    }
+    
     
     func loadWeatherData() {
         
