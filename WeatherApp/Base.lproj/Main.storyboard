@@ -28,17 +28,17 @@
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="aqV-iW-QxA" userLabel="CurrentWeatherStack">
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" text="Today's Day, Date &amp; Year" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="6Ol-nL-EDa">
+                                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" text="Today's Day, Date &amp; Year" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="6Ol-nL-EDa">
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" priority="750" constant="25" id="e0I-J2-xuO"/>
+                                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" priority="750" constant="25" id="e0I-J2-xuO"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="747" verticalCompressionResistancePriority="747" text="--.-ºC" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eu2-HW-fgp">
+                                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="256" verticalHuggingPriority="256" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" text="--.-ºC" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="eu2-HW-fgp">
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" priority="750" constant="72" id="iTU-EC-Ohl"/>
+                                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" priority="750" constant="72" id="iTU-EC-Ohl"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="AvenirNext-UltraLight" family="Avenir Next" pointSize="72"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -77,11 +77,11 @@
                                                                 </subviews>
                                                                 <constraints>
                                                                     <constraint firstAttribute="trailing" secondItem="PZi-wn-dAL" secondAttribute="trailing" id="B4K-ho-5uP"/>
-                                                                    <constraint firstAttribute="height" constant="25" id="rPe-P0-dPS"/>
+                                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="25" id="rPe-P0-dPS"/>
                                                                     <constraint firstItem="KQr-Tl-1AM" firstAttribute="leading" secondItem="2BD-At-LQI" secondAttribute="leading" id="zr0-kE-6bG"/>
                                                                 </constraints>
                                                             </stackView>
-                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Weather" translatesAutoresizingMaskIntoConstraints="NO" id="CT1-Iw-HYy"/>
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" image="Weather" translatesAutoresizingMaskIntoConstraints="NO" id="CT1-Iw-HYy"/>
                                                             <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="745" verticalCompressionResistancePriority="745" distribution="fillProportionally" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="qaH-Ey-WLv" userLabel="LocationStack">
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" text="Your location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ksc-bq-Xfa">
@@ -96,7 +96,7 @@
                                                                     </label>
                                                                 </subviews>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="30" id="3gg-YG-c9z"/>
+                                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="25" id="3gg-YG-c9z"/>
                                                                 </constraints>
                                                             </stackView>
                                                         </subviews>
